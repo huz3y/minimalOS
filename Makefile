@@ -1,6 +1,6 @@
 # Author: UWE
 # Desc: Makefile to build Minimal Operating System
-# Goal: Provide students with the bare minimum to
+# Goal: Provide students with the bare minimum to 
 #       boot first OS
 
 OSNAME=minimal.bin
