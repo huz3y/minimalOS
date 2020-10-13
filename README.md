@@ -24,11 +24,10 @@ This will create the operating system binary itself:
 
     minimalos.bin
 
-and a CDROM, i.e. ISO, image:
-
-    minimalos.iso
 
 Run
+  
+    qemu-system-i386 --kernel minimal.bin
 ============
 
 Now we have built our minimal OS we would like to run it. To do this
