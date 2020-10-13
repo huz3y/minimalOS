@@ -66,7 +66,7 @@ _start:
 	# to disable interrupts, the halt instruction ('hlt') to stop the CPU until
 	# the next interrupt arrives, and jumping to the halt instruction if it ever
 	# continues execution, just to be safe. We will create a local label rather
-	# than real symbol and jump to there endlessly.
+	# than real symbol and jump to there endlessly. 
 	cli
 	hlt
 .Lhang:
