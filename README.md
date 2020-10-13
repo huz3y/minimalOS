@@ -35,7 +35,7 @@ we could create a bootable CD and run it just like you would an OS
 like Windows or Linux, however, its a pain to have to reboot our
 machine all the time and so instead we can use a VM. You can now
 load the IOS image into your choice of VM, I, for example, use
-VMWare Fusion on my Mac, or for ease of use we can use
+VMWare Fusion on my Mac, or for ease of use we can use 
 
     (QEMU)[wiki.qemu.org/Main_Page]
 
