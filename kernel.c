@@ -19,22 +19,22 @@
  
 /* Hardware text mode color constants. */
 enum vga_color {
-	COLOR_BLACK = 0,
-	COLOR_BLUE = 1,
-	COLOR_GREEN = 2,
-	COLOR_CYAN = 3,
-	COLOR_RED = 4,
-	COLOR_MAGENTA = 5,
-	COLOR_BROWN = 6,
-	COLOR_LIGHT_GREY = 7,
-	COLOR_DARK_GREY = 8,
-	COLOR_LIGHT_BLUE = 9,
-	COLOR_LIGHT_GREEN = 10,
-	COLOR_LIGHT_CYAN = 11,
-	COLOR_LIGHT_RED = 12,
-	COLOR_LIGHT_MAGENTA = 13,
-	COLOR_LIGHT_BROWN = 14,
-	COLOR_WHITE = 15,
+  COLOR_BLACK = 0,
+  COLOR_BLUE = 1,
+  COLOR_GREEN = 2,
+  COLOR_CYAN = 3,
+  COLOR_RED = 4,
+  COLOR_MAGENTA = 5,
+  COLOR_BROWN = 6,
+  COLOR_LIGHT_GREY = 7,
+  COLOR_DARK_GREY = 8,
+  COLOR_LIGHT_BLUE = 9,
+  COLOR_LIGHT_GREEN = 10,
+  COLOR_LIGHT_CYAN = 11,
+  COLOR_LIGHT_RED = 12,
+  COLOR_LIGHT_MAGENTA = 13,
+  COLOR_LIGHT_BROWN = 14,
+  COLOR_WHITE = 15,
 };
  
 uint8_t make_color(enum vga_color fg, enum vga_color bg) {
@@ -49,7 +49,7 @@ uint16_t make_vgaentry(char c, uint8_t color) {
  
 size_t strlen(const char* str) {
   size_t ret = 0;
-  while ( str[ret] != 0 )
+  while (str[ret] != 0)
     ret++;
   return ret;
 }
@@ -74,6 +74,17 @@ void terminal_initialize() {
     }
   }
 }
+
+// Comment: This function performs the operation of copying and shifting the terminal lines upward.
+void terminal_shift() {
+  for (size_t y = 0; y < VGA_HEIGHT - 1; y++) { 
+    for (size_t x = 0; x < VGA_WIDTH; x++) {
+      const size_t index = y * VGA_WIDTH + x;
+      const size_t new_index = (y + 1) * VGA_WIDTH + x;
+      terminal_buffer[index] = terminal_buffer[new_index];
+    }
+  }
+}
  
 void terminal_setcolor(uint8_t color) {
   terminal_color = color;
@@ -84,12 +95,25 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
   terminal_buffer[index] = make_vgaentry(c, color);
 }
 
+// Comment: This function handles the display of characters on the terminal, including support for the newline character ('\n').
 void terminal_putchar(char c) {
-  terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-  if (++terminal_column == VGA_WIDTH) {
+  if (c == '\n') {
+    ++terminal_row;
     terminal_column = 0;
-    if (++terminal_row == VGA_HEIGHT) {
-      terminal_row = 0;
+    // Comment: Shifts the terminal lines up when it becomes full and a new line needs to be displayed.
+    if (terminal_row == VGA_HEIGHT) {
+      terminal_shift(); 
+      terminal_row--;
+    }
+  } else {
+    terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+    if (++terminal_column == VGA_WIDTH) {
+      terminal_column = 0;
+      // Comment: Shifts the terminal lines up when it becomes full and a new line needs to be displayed.
+      if (++terminal_row == VGA_HEIGHT) {
+        terminal_shift();
+        terminal_row--;
+      }
     }
   }
 }
@@ -107,9 +131,22 @@ void kernel_main() {
   /* Initialize terminal interface */
   terminal_initialize();
   
-  /* Since there is no support for newlines in terminal_putchar
-   * yet, '\n' will produce some VGA specific character instead.
-   * This is normal.
-   */
+  terminal_setcolor(COLOR_RED);
   terminal_writestring("Hello, kernel World!\n");
+
+  for (int i = 0; i < 6; i++) {
+    terminal_setcolor(COLOR_WHITE);
+    terminal_writestring("Hello, kernel World!\n");
+  }
+
+  for (int i = 0; i < 18; i++) {
+    terminal_setcolor(COLOR_BLUE);
+    terminal_writestring("Hello, kernel World!\n");
+  }
+
+  for (int i = 0; i < 5; i++) {
+    terminal_setcolor(COLOR_GREEN);
+    terminal_writestring("Hello, kernel World!\n");
+  }
 }
+
